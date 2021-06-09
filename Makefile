@@ -16,6 +16,8 @@ OBJECTS := $(patsubst $(DIR)/%.c,  $(DIR)/%.o, $(SOURCES))
 ml: SPECCMPL = -D INC_ML_CMPL
 inc: SPECCMPL = -D INC_CMPL 
 constraint_inc: SPECCMPL = -D CINC_CMPL
+constraint_inc_d: SPECCMPL = -D CINC_CMPL
+constraint_inc_d: CC += -g
 
 clean:
 	rm -f $(DIR)/*.o
@@ -23,8 +25,9 @@ clean:
 	rm -f ml
 	rm -f inc
 	rm -f constraint_inc
+	rm -f constraint_inc_d
 
-ml inc constraint_inc: clean $(OBJECTS)
+ml inc constraint_inc constraint_inc_d: clean $(OBJECTS)
 	$(CC) $(SPECCMPL) $(filter-out $<,$^) -lm -o $@
 
 $(DIR)/%.o: $(DIR)/%.c
