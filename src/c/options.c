@@ -322,6 +322,52 @@ int find_arg_index(
       (*i) += options->num_trees;
       break;
 
+    case 'v':
+        switch(content[0]){
+          case '1':
+            options->is_revoting = 0; 
+            options->weight_power = 0; 
+            options->is_all_quartet = 0; 
+            break;
+
+          case '2':
+            options->is_revoting = 1;
+            options->weight_power = 0; 
+            options->is_all_quartet = 0; 
+
+            options->revoting_weight_power = content == '1' ? 1 : 2;
+            options->is_revoting_all_quartet = 0;
+            break;
+
+          case '3':
+            options->is_revoting = 0; 
+            options->weight_power = 2; 
+            options->is_all_quartet = 0;
+            break;
+
+          case '4':
+            options->is_revoting = 1;
+            options->weight_power = 2; 
+            options->is_all_quartet = 0; 
+
+            options->revoting_weight_power = 2;
+            options->is_revoting_all_quartet = 1;
+            break;
+
+          case '5':
+            options->is_revoting = 0; 
+            options->weight_power = 2; 
+            options->is_all_quartet = 1;
+            break; 
+
+          case '6':
+            options->is_revoting = 0; 
+            options->weight_power = 0; 
+            options->is_all_quartet = 1;
+            break; 
+        }
+      break;
+
     default:
       ASSERT(GENERAL_ERROR, WRONG_ARG_FORMAT, 0);
       break;
