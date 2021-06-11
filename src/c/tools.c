@@ -351,7 +351,7 @@ int unweighted_job(char * in_tree, char * out_path){
   SYSCAL(
       GENERAL_ERROR,
       ERR_UNWGHT,
-      "%s -t %s > %s",
+      "%s --input-filename %s --output-path %s --dist-type node",
       tree_to_dist_bin,
       in_tree,
       out_path

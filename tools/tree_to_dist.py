@@ -1,36 +1,33 @@
 #!/usr/bin/env python3
 
-import argparse
+import click
 import dendropy
-import sys
 
-def main(args):
-	tree = dendropy.Tree.get_from_path(src=args.input_tree_file, schema="newick")
-	for e in tree.postorder_edge_iter():
-        	if e.length is not None:
-                	e.length = 1
+@click.command()
+@click.option("--input-filename", required=True, type=click.Path(exists=True), help="Input newick tree file")
+@click.option("--output-path", required=True, type=click.Path(), help="Output path for distance matrix")
+@click.option("--dist-type", type=click.Choice(["node", "brlen"], case_sensitive=False), required=True, help="Type of distance to calculate")
+def tree_to_dist(input_filename, output_path, dist_type):
+    tree_to_dist_helper(input_filename, output_path, dist_type)
 
-	for root in tree.preorder_node_iter():
-		if len(root.child_edges()) == 2:
-			for e in root.child_edge_iter():
-				if e.length is not None:
-					e.length = 0.5
-		break
+def tree_to_dist_helper(input_filename, output_path, dist_type):
+    tree = dendropy.Tree.get(path=input_filename, schema="newick")
 
-	pdc = tree.phylogenetic_distance_matrix()
+    is_weighted_edge_distances=None
+    if(dist_type == "node"):
+        is_weighted_edge_distances=False
+    elif(dist_type == "brlen"):
+        is_weighted_edge_distances=True
 
-#	print(pdm.as_string("phylip"))
-	sys.stdout.write("%d\n" % len(tree.leaf_nodes())) 
-	for i, t1 in enumerate(tree.taxon_namespace):
-		sys.stdout.write("%s " % t1.label)
-		for t2 in tree.taxon_namespace:
-        		sys.stdout.write("%d " % pdc(t1, t2))# print("Distance between '%s' and '%s': %s" % (t1.label, t2.label, pdc(t1, t2)))
-		sys.stdout.write("\n")
+    pdc = tree.phylogenetic_distance_matrix()
+    with open(output_path, "w") as f:
+        f.write(str(len(tree.leaf_nodes())))
+        f.write("\n")
+        for row_taxon in tree.taxon_namespace:
+            f.write(row_taxon.label + " ")
+            for col_taxon in tree.taxon_namespace:
+                f.write(str(pdc.distance(row_taxon, col_taxon, is_weighted_edge_distances)) + " ")
+            f.write("\n")
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="")
-
-    parser.add_argument("-t", "--input_tree_file", type=str,
-                        required=True,
-                        help="Input tree file")
-
-    main(parser.parse_args())
+    tree_to_dist()
