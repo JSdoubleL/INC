@@ -72,7 +72,7 @@ int parse_tree(INC_GRP * meta, MAP_GRP * map, ml_options * options){
   ASSERT(
       GENERAL_ERROR,
       "assert failed in parse tree",
-      test_binary_trees(options->num_trees, options->tree_names) == 0
+      test_binary_trees(options->num_trees, options->tree_names, options->output_prefix) == 0
   ); 
 
   // Init meta's field

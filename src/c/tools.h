@@ -7,7 +7,8 @@
 
 extern int test_binary_trees(
     int n,
-    char ** filename
+    char ** filename,
+    char * output_prefix
 );
 
 extern int make_constraint_trees_from_disjoint_subsets(

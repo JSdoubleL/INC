@@ -17,12 +17,15 @@ int find_prefix_and_dir_from_path(char *, char *, char *, char *);
 
 // A function to check if all input trees are binary. Return 0 if all trees are
 // binary and -1 otherwise.
-int test_binary_trees(int n, char ** filename){
+int test_binary_trees(int n, char ** filename, char * output_prefix){
   char command[GENERAL_BUFFER_SIZE];
   int i;
   FILE *f;
   int res;
-  char tmp[] = "tmp"; 
+  //char tmp[] = "tmp";
+  char tmp[strlen("tmp")+strlen(output_prefix)];
+
+  snprintf(tmp, sizeof(tmp), "%stmp", output_prefix);
 
   strcpy(command, "check_binary.py -t ");
   for(i = 0; i < n; i++){
@@ -39,7 +42,7 @@ int test_binary_trees(int n, char ** filename){
     tmp
   );
 
-  f = fopen("tmp", "r");
+  f = fopen(tmp, "r");
   fscanf(f, "%d", &res);
   fclose(f);
 
